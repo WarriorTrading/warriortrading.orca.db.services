@@ -1,0 +1,12 @@
+import { position } from './positions/positions'
+import { order } from './orders/orders'
+import { account } from './accounts/accounts'
+// For more information about this file see https://dove.feathersjs.com/guides/cli/application.html#configure-functions
+import type { Application } from '../declarations'
+
+export const services = (app: Application) => {
+  app.configure(position)
+  app.configure(order)
+  app.configure(account)
+  // All services will be registered here
+}
