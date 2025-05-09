@@ -3,25 +3,36 @@ import type { Params } from '@feathersjs/feathers'
 import { KnexService } from '@feathersjs/knex'
 import type { KnexAdapterParams, KnexAdapterOptions } from '@feathersjs/knex'
 
-import type { Application } from '../../declarations'
-import type { Order, OrderData, OrderPatch, OrderQuery } from './orders.schema'
+import type { Application } from '../../declarations.js'
+import type { Order, OrderData, OrderPatch, OrderQuery } from './orders.schema.js'
 import type { PaginationOptions } from '@feathersjs/feathers'
 import type { Paginated } from '@feathersjs/feathers'
 
 export type { Order, OrderData, OrderPatch, OrderQuery }
 
-export interface OrderParams extends KnexAdapterParams<OrderQuery> {}
+export interface OrderParams extends KnexAdapterParams<OrderQuery> {
+  query?: OrderQuery & {
+    $sort?: { [key: string]: number }
+    $limit?: number
+    $skip?: number
+    $select?: string[]
+    skip?: number
+    $and?: Array<{ [key: string]: any }>
+    startTime?: number
+    endTime?: number
+  }
+}
 
 // By default calls the standard Knex adapter service methods but can be customized with your own functionality.
-export class OrderService<ServiceParams extends Params = OrderParams> extends KnexService<
+export class OrderService extends KnexService<
   Order,
   OrderData,
   OrderParams,
   OrderPatch
 > {
-  find(params?: OrderParams & { paginate?: PaginationOptions }): Promise<Paginated<Order>>;
-  find(params?: OrderParams): Promise<Order[]>;
-  find(params?: OrderParams): Promise<Paginated<Order> | Order[]> {
+  async find(params?: OrderParams & { paginate?: PaginationOptions }): Promise<Paginated<Order>>;
+  async find(params?: OrderParams & { paginate: false }): Promise<Order[]>;
+  async find(params?: OrderParams): Promise<Paginated<Order> | Order[]> {
     const query = params?.query || {}
     const { startTime, endTime, ...restQuery } = query
 
@@ -44,7 +55,7 @@ export class OrderService<ServiceParams extends Params = OrderParams> extends Kn
     return super.find({
       ...params,
       query: finalQuery
-    })
+    } as OrderParams)
   }
 }
 
@@ -52,6 +63,6 @@ export const getOptions = (app: Application): KnexAdapterOptions => {
   return {
     paginate: app.get('paginate'),
     Model: app.get('postgresqlClient'),
-    name: 'orca_sim_order'
+    name: 'orders'
   }
 }

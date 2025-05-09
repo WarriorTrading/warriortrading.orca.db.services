@@ -1,51 +1,81 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/client.html
+import type { Application } from '@feathersjs/feathers'
 import { feathers } from '@feathersjs/feathers'
-import type { TransportConnection, Application } from '@feathersjs/feathers'
-import authenticationClient from '@feathersjs/authentication-client'
-import type { AuthenticationClientOptions } from '@feathersjs/authentication-client'
-
-import { positionClient } from './services/positions/positions.shared'
-export type {
+import { io } from 'socket.io-client'
+import type { SocketService } from '@feathersjs/socketio-client'
+import { positionClient } from './services/positions/positions.shared.js'
+import type {
   Position,
   PositionData,
   PositionQuery,
   PositionPatch
-} from './services/positions/positions.shared'
+} from './services/positions/positions.shared.js'
+import { orderClient } from './services/orders/orders.shared.js'
+import type { Order, OrderData, OrderQuery, OrderPatch } from './services/orders/orders.shared.js'
+import { accountClient } from './services/accounts/accounts.shared.js'
+import type { Account, AccountData, AccountQuery, AccountPatch } from './services/accounts/accounts.shared.js'
 
-import { orderClient } from './services/orders/orders.shared'
-export type { Order, OrderData, OrderQuery, OrderPatch } from './services/orders/orders.shared'
+// Import client modules
+import socketio from '@feathersjs/socketio-client'
+import rest from '@feathersjs/rest-client'
+import auth from '@feathersjs/authentication-client'
 
-import { accountClient } from './services/accounts/accounts.shared'
-export type { Account, AccountData, AccountQuery, AccountPatch } from './services/accounts/accounts.shared'
+export type { Position, PositionData, PositionQuery, PositionPatch }
+export type { Order, OrderData, OrderQuery, OrderPatch }
+export type { Account, AccountData, AccountQuery, AccountPatch }
 
 export interface Configuration {
-  connection: TransportConnection<ServiceTypes>
+  host: string
+  port: number
+  public: string
+  origins: string[]
+  paginate: {
+    default: number
+    max: number
+  }
+  authentication: {
+    secret: string
+    authStrategies: string[]
+    oauth: {
+      redirect: string
+      origins: string[]
+    }
+  }
 }
 
 export interface ServiceTypes {}
 
 export type ClientApplication = Application<ServiceTypes, Configuration>
 
-/**
- * Returns a typed client for the orca-db-services app.
- *
- * @param connection The REST or Socket.io Feathers client connection
- * @param authenticationOptions Additional settings for the authentication client
- * @see https://dove.feathersjs.com/api/client.html
- * @returns The Feathers client application
- */
-export const createClient = <Configuration = any,>(
-  connection: TransportConnection<ServiceTypes>,
-  authenticationOptions: Partial<AuthenticationClientOptions> = {}
-) => {
-  const client: ClientApplication = feathers()
+export const createClient = (config: Configuration) => {
+  const socket = io(config.host, {
+    transports: ['websocket'],
+    forceNew: true,
+    reconnection: true,
+    timeout: 10000
+  })
 
-  client.configure(connection)
-  client.configure(authenticationClient(authenticationOptions))
-  client.set('connection', connection)
+  const client = feathers<ServiceTypes, Configuration>()
 
-  client.configure(accountClient)
-  client.configure(orderClient)
+  // Set up Socket.io client with the socket
+  const socketioClient = socketio as any
+  client.configure(socketioClient(socket))
+
+  // Set up REST client
+  const restClient = rest as any
+  const restService = restClient(config.host)
+  client.configure(restService.fetch(window.fetch.bind(window)))
+
+  // Set up authentication client
+  const authClient = auth as any
+  client.configure(authClient({
+    storage: window.localStorage
+  }))
+
+  // Register service clients
   client.configure(positionClient)
+  client.configure(orderClient)
+  client.configure(accountClient)
+
   return client
 }

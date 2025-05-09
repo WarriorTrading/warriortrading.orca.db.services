@@ -3,9 +3,9 @@ import { resolve } from '@feathersjs/schema'
 import { Type, getValidator, querySyntax } from '@feathersjs/typebox'
 import type { Static } from '@feathersjs/typebox'
 
-import type { HookContext } from '../../declarations'
-import { dataValidator, queryValidator } from '../../validators'
-import type { OrderService } from './orders.class'
+import type { HookContext } from '../../declarations.js'
+import { dataValidator, queryValidator } from '../../validators.js'
+import type { OrderService } from './orders.class.js'
 
 // Main data model schema
 export const orderSchema = Type.Object(
@@ -40,11 +40,20 @@ export const orderResolver = resolve<Order, HookContext<OrderService>>({})
 export const orderExternalResolver = resolve<Order, HookContext<OrderService>>({})
 
 // Schema for creating new entries
-export const orderDataSchema = Type.Pick(orderSchema, [
-  'id', 'user_id', 'account_id', 'symbol', 'exchange_code', 
-  'side', 'order_type', 'trade_type', 'price', 'qty'
-], {
-  $id: 'OrderData'
+export const orderDataSchema = Type.Object({
+  id: Type.String(),
+  user_id: Type.String(),
+  account_id: Type.String(),
+  symbol: Type.String(),
+  exchange_code: Type.String(),
+  side: Type.Integer({ minimum: 1, maximum: 3 }), // 1:buy 2:sell 3:sell short
+  order_type: Type.Integer({ minimum: 1, maximum: 2 }), // 1:market order 2:limit order
+  trade_type: Type.Integer({ minimum: 1, maximum: 3 }), // 1:day 2:gtc 3:ioc
+  price: Type.Integer(), // unit $0.0001
+  qty: Type.Integer()
+}, {
+  $id: 'OrderData',
+  additionalProperties: false
 })
 export type OrderData = Static<typeof orderDataSchema>
 export const orderDataValidator = getValidator(orderDataSchema, dataValidator)

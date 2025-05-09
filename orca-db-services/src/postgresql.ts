@@ -1,13 +1,19 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/databases.html
-import knex from 'knex'
+import { createRequire } from 'module'
 import type { Knex } from 'knex'
-import type { Application } from './declarations'
+import type { Application } from './declarations.js'
 
-declare module './declarations' {
+declare module './declarations.js' {
   interface Configuration {
-    postgresqlClient: Knex
+    postgresql: {
+      client: string
+      connection: string
+    }
   }
 }
+
+const require = createRequire(import.meta.url)
+const knex = require('knex')
 
 export const postgresql = (app: Application) => {
   const config = app.get('postgresql')

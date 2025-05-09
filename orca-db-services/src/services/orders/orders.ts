@@ -11,14 +11,14 @@ import {
   orderDataResolver,
   orderPatchResolver,
   orderQueryResolver
-} from './orders.schema'
+} from './orders.schema.js'
 
-import type { Application } from '../../declarations'
-import { OrderService, getOptions } from './orders.class'
-import { orderPath, orderMethods } from './orders.shared'
+import type { Application } from '../../declarations.js'
+import { OrderService, getOptions } from './orders.class.js'
+import { orderPath, orderMethods } from './orders.shared.js'
 
-export * from './orders.class'
-export * from './orders.schema'
+export * from './orders.class.js'
+export * from './orders.schema.js'
 
 // A configure function that registers the service and its hooks via `app.configure`
 export const order = (app: Application) => {
@@ -52,7 +52,7 @@ export const order = (app: Application) => {
 }
 
 // Add this service to the service type index
-declare module '../../declarations' {
+declare module '../../declarations.js' {
   interface ServiceTypes {
     [orderPath]: OrderService
   }

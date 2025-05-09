@@ -11,14 +11,14 @@ import {
   positionDataResolver,
   positionPatchResolver,
   positionQueryResolver
-} from './positions.schema'
+} from './positions.schema.js'
 
-import type { Application } from '../../declarations'
-import { PositionService, getOptions } from './positions.class'
-import { positionPath, positionMethods } from './positions.shared'
+import type { Application } from '../../declarations.js'
+import { PositionService, getOptions } from './positions.class.js'
+import { positionPath, positionMethods } from './positions.shared.js'
 
-export * from './positions.class'
-export * from './positions.schema'
+export * from './positions.class.js'
+export * from './positions.schema.js'
 
 // A configure function that registers the service and its hooks via `app.configure`
 export const position = (app: Application) => {
@@ -64,7 +64,7 @@ export const position = (app: Application) => {
 }
 
 // Add this service to the service type index
-declare module '../../declarations' {
+declare module '../../declarations.js' {
   interface ServiceTypes {
     [positionPath]: PositionService
   }

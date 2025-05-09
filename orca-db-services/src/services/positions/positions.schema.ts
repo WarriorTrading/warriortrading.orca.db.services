@@ -3,9 +3,9 @@ import { resolve } from '@feathersjs/schema'
 import { Type, getValidator, querySyntax } from '@feathersjs/typebox'
 import type { Static } from '@feathersjs/typebox'
 
-import type { HookContext } from '../../declarations'
-import { dataValidator, queryValidator } from '../../validators'
-import type { PositionService } from './positions.class'
+import type { HookContext } from '../../declarations.js'
+import { dataValidator, queryValidator } from '../../validators.js'
+import type { PositionService } from './positions.class.js'
 
 // Main data model schema
 export const positionSchema = Type.Object(
@@ -34,11 +34,18 @@ export const positionResolver = resolve<Position, HookContext<PositionService>>(
 export const positionExternalResolver = resolve<Position, HookContext<PositionService>>({})
 
 // Schema for creating new entries
-export const positionDataSchema = Type.Pick(positionSchema, [
-  'id', 'user_id', 'account_id', 'symbol', 'position_type', 
-  'avg_price', 'qty', 'executions'
-], {
-  $id: 'PositionData'
+export const positionDataSchema = Type.Object({
+  id: Type.String(),
+  user_id: Type.String(),
+  account_id: Type.String(),
+  symbol: Type.String(),
+  position_type: Type.Integer({ minimum: 1, maximum: 2 }), // 1:Long Position 2:Short Position
+  avg_price: Type.Integer(), // unit $0.0001
+  qty: Type.Integer(),
+  executions: Type.String() // execution list string
+}, {
+  $id: 'PositionData',
+  additionalProperties: false
 })
 export type PositionData = Static<typeof positionDataSchema>
 export const positionDataValidator = getValidator(positionDataSchema, dataValidator)

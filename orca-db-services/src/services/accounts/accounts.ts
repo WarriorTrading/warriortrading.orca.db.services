@@ -11,14 +11,14 @@ import {
   accountDataResolver,
   accountPatchResolver,
   accountQueryResolver
-} from './accounts.schema'
+} from './accounts.schema.js'
 
-import type { Application } from '../../declarations'
-import { AccountService, getOptions } from './accounts.class'
-import { accountPath, accountMethods } from './accounts.shared'
+import type { Application } from '../../declarations.js'
+import { AccountService, getOptions } from './accounts.class.js'
+import { accountPath, accountMethods } from './accounts.shared.js'
 
-export * from './accounts.class'
-export * from './accounts.schema'
+export * from './accounts.class.js'
+export * from './accounts.schema.js'
 
 // A configure function that registers the service and its hooks via `app.configure`
 export const account = (app: Application) => {
@@ -52,7 +52,7 @@ export const account = (app: Application) => {
 }
 
 // Add this service to the service type index
-declare module '../../declarations' {
+declare module '../../declarations.js' {
   interface ServiceTypes {
     [accountPath]: AccountService
   }

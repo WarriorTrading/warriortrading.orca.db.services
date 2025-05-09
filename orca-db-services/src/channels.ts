@@ -1,9 +1,9 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/channels.html
 import type { RealTimeConnection, Params } from '@feathersjs/feathers'
 import type { AuthenticationResult } from '@feathersjs/authentication'
-import '@feathersjs/transport-commons'
-import type { Application, HookContext } from './declarations'
-import { logger } from './logger'
+import { channels as transportChannels } from '@feathersjs/transport-commons'
+import type { Application, HookContext } from './declarations.js'
+import { logger } from './logger.js'
 
 export const channels = (app: Application) => {
   logger.warn(

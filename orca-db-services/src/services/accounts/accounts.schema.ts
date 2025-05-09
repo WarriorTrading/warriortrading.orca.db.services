@@ -3,9 +3,9 @@ import { resolve } from '@feathersjs/schema'
 import { Type, getValidator, querySyntax } from '@feathersjs/typebox'
 import type { Static } from '@feathersjs/typebox'
 
-import type { HookContext } from '../../declarations'
-import { dataValidator, queryValidator } from '../../validators'
-import type { AccountService } from './accounts.class'
+import type { HookContext } from '../../declarations.js'
+import { dataValidator, queryValidator } from '../../validators.js'
+import type { AccountService } from './accounts.class.js'
 
 // Main data model schema
 export const accountSchema = Type.Object(
@@ -28,8 +28,13 @@ export const accountResolver = resolve<Account, HookContext<AccountService>>({})
 export const accountExternalResolver = resolve<Account, HookContext<AccountService>>({})
 
 // Schema for creating new entries
-export const accountDataSchema = Type.Pick(accountSchema, ['id', 'user_id', 'original_payment'], {
-  $id: 'AccountData'
+export const accountDataSchema = Type.Object({
+  id: Type.String(),
+  user_id: Type.String(),
+  original_payment: Type.Integer()
+}, {
+  $id: 'AccountData',
+  additionalProperties: false
 })
 export type AccountData = Static<typeof accountDataSchema>
 export const accountDataValidator = getValidator(accountDataSchema, dataValidator)

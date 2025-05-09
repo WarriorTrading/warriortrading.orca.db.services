@@ -36,7 +36,7 @@
   ],
   "main": "lib/client",
   "scripts": {
-    "dev": "nodemon -x ts-node src/index.ts",
+    "dev": "NODE_OPTIONS='--loader ts-node/esm' nodemon src/index.ts",
     "compile": "shx rm -rf lib/ && tsc",
     "start": "node lib/",
     "prettier": "npx prettier \"**/*.ts\" --write",
@@ -50,6 +50,7 @@
     "@feathersjs/adapter-commons": "^5.0.34",
     "@feathersjs/authentication": "^5.0.34",
     "@feathersjs/authentication-client": "^5.0.34",
+    "@feathersjs/client": "^5.0.34",
     "@feathersjs/configuration": "^5.0.34",
     "@feathersjs/errors": "^5.0.34",
     "@feathersjs/feathers": "^5.0.34",
@@ -57,10 +58,12 @@
     "@feathersjs/koa": "^5.0.34",
     "@feathersjs/schema": "^5.0.34",
     "@feathersjs/socketio": "^5.0.34",
+    "@feathersjs/socketio-client": "^5.0.34",
     "@feathersjs/transport-commons": "^5.0.34",
     "@feathersjs/typebox": "^5.0.34",
     "knex": "^3.1.0",
     "pg": "^8.15.6",
+    "socket.io-client": "^4.7.4",
     "winston": "^3.17.0"
   },
   "devDependencies": {

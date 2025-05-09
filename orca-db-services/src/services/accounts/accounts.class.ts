@@ -3,15 +3,29 @@ import type { Params } from '@feathersjs/feathers'
 import { KnexService } from '@feathersjs/knex'
 import type { KnexAdapterParams, KnexAdapterOptions } from '@feathersjs/knex'
 
-import type { Application } from '../../declarations'
-import type { Account, AccountData, AccountPatch, AccountQuery } from './accounts.schema'
+import type { Application } from '../../declarations.js'
+import { Account, AccountData, AccountPatch, AccountQuery } from './accounts.schema.js'
 
 export type { Account, AccountData, AccountPatch, AccountQuery }
 
-export interface AccountParams extends KnexAdapterParams<AccountQuery> {}
+export interface AccountParams extends KnexAdapterParams<AccountQuery> {
+  query?: AccountQuery & {
+    $sort?: { [key: string]: number }
+    $limit?: number
+    $skip?: number
+    $select?: string[]
+    $and?: Array<Partial<AccountQuery>>
+    skip?: number
+  }
+}
 
 // By default calls the standard Knex adapter service methods but can be customized with your own functionality.
-export class AccountService extends KnexService<Account, AccountData, AccountParams, AccountPatch> {}
+export class AccountService<ServiceParams extends AccountParams = AccountParams> extends KnexService<
+  Account,
+  AccountData,
+  ServiceParams,
+  AccountPatch
+> {}
 
 export const getOptions = (app: Application): KnexAdapterOptions => {
   return {
