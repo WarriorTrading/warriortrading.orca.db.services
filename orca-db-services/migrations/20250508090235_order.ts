@@ -21,8 +21,8 @@ export async function up(knex: Knex): Promise<void> {
     table.bigInteger('frozen_payment').notNullable().defaultTo(0).comment('The frozen account\'s balance of this order,unit:$0.0001')
     table.integer('frozen_qty').notNullable().defaultTo(0).comment('The frozen quantity of this order')
     table.string('rejection_reason').comment('The order\'s rejection reason')
-    table.timestamp('created_at', { useTz: true }).notNullable().comment('The timestamp of order\'s created time(accurate to milliseconds)')
-    table.timestamp('updated_at', { useTz: true }).notNullable().comment('The timestamp of order\'s latest updated time(accurate to milliseconds)')
+    table.timestamp('created_at', { useTz: true }).notNullable().defaultTo(knex.fn.now()).comment('The timestamp of order\'s created time(accurate to milliseconds)')
+    table.timestamp('updated_at', { useTz: true }).notNullable().defaultTo(knex.fn.now()).comment('The timestamp of order\'s latest updated time(accurate to milliseconds)')
 
     // Add indexes
     table.index('user_id')

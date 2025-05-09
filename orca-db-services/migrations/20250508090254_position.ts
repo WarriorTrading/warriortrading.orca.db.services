@@ -14,8 +14,8 @@ export async function up(knex: Knex): Promise<void> {
     table.decimal('realized_pl', 20, 4).notNullable().defaultTo(0).comment('The order\'s realized Profit & Loss amount')
     table.integer('frozen_qty').notNullable().defaultTo(0).comment('The position\'s frozen quantity')
     table.json('executions').notNullable().comment('The position\'s execution list string, including each order\'s id, price and qty')
-    table.timestamp('created_at', { useTz: true }).notNullable().comment('The timestamp of position\'s created time(accurate to milliseconds)')
-    table.timestamp('updated_at', { useTz: true }).notNullable().comment('The timestamp of position\'s latest updated time(accurate to milliseconds)')
+    table.timestamp('created_at', { useTz: true }).notNullable().defaultTo(knex.fn.now()).comment('The timestamp of position\'s created time(accurate to milliseconds)')
+    table.timestamp('updated_at', { useTz: true }).notNullable().defaultTo(knex.fn.now()).comment('The timestamp of position\'s latest updated time(accurate to milliseconds)')
     table.timestamp('closed_at', { useTz: true }).notNullable().defaultTo(knex.fn.now()).comment('The timestamp of position\'s closed time(accurate to milliseconds), default is 0, means opened')
 
     // Add indexes
