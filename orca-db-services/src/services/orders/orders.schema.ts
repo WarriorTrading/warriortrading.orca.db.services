@@ -15,7 +15,7 @@ export const orderSchema = Type.Object(
     account_id: Type.String(),
     symbol: Type.String(),
     exchange_code: Type.String(),
-    side: Type.Integer({ minimum: 1, maximum: 2 }), // 1:buy 2:sell
+    side: Type.Integer({ minimum: 1, maximum: 3 }), // 1:buy 2:sell 3:sell short
     order_type: Type.Integer({ minimum: 1, maximum: 2 }), // 1:market order 2:limit order
     trade_type: Type.Integer({ minimum: 1, maximum: 3 }), // 1:day 2:gtc 3:ioc
     status: Type.Integer({ minimum: 1, maximum: 6 }), // 1:NEW 2:VALIDATED 3:FILLED 4:REJECTED 5:EXPIRED 6:CANCELLED
@@ -55,9 +55,7 @@ export const orderDataResolver = resolve<Order, HookContext<OrderService>>({
   filled_qty: async () => 0,
   cost: async () => 0,
   frozen_payment: async () => 0,
-  frozen_qty: async () => 0,
-  created_at: async () => Date.now(),
-  updated_at: async () => Date.now()
+  frozen_qty: async () => 0
 })
 
 // Schema for updating existing entries
@@ -72,13 +70,14 @@ export const orderPatchResolver = resolve<Order, HookContext<OrderService>>({
 
 // Schema for allowed query properties
 export const orderQueryProperties = Type.Pick(orderSchema, [
-  'id', 'account_id', 'status', 'symbol', 'side'
+  'id', 'account_id', 'status', 'symbol', 'side', 'created_at'
 ])
 export const orderQuerySchema = Type.Intersect(
   [
     querySyntax(orderQueryProperties),
     Type.Object({
-      date_range: Type.Optional(Type.String()),
+      startTime: Type.Optional(Type.Integer()),
+      endTime: Type.Optional(Type.Integer()),
       limit: Type.Optional(Type.Integer()),
       skip: Type.Optional(Type.Integer())
     }, { additionalProperties: false })

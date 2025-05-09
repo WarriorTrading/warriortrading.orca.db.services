@@ -11,12 +11,7 @@ export type { Account, AccountData, AccountPatch, AccountQuery }
 export interface AccountParams extends KnexAdapterParams<AccountQuery> {}
 
 // By default calls the standard Knex adapter service methods but can be customized with your own functionality.
-export class AccountService<ServiceParams extends Params = AccountParams> extends KnexService<
-  Account,
-  AccountData,
-  AccountParams,
-  AccountPatch
-> {}
+export class AccountService extends KnexService<Account, AccountData, AccountParams, AccountPatch> {}
 
 export const getOptions = (app: Application): KnexAdapterOptions => {
   return {

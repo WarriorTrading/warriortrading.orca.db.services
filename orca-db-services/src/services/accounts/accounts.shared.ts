@@ -5,7 +5,7 @@ import type { Account, AccountData, AccountPatch, AccountQuery, AccountService }
 
 export type { Account, AccountData, AccountPatch, AccountQuery }
 
-export type AccountClientService = Pick<AccountService<Params<AccountQuery>>, (typeof accountMethods)[number]>
+export type AccountClientService = Pick<AccountService, (typeof accountMethods)[number]>
 
 export const accountPath = 'accounts'
 

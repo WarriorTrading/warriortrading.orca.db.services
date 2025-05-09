@@ -182,13 +182,14 @@ Find/Get/Create/Patch
 - **Service Method Type**
     GET
 - **Description**   
-   Find the user account's orders according to condition，the results is ordered by created_at column
+   Find the user account's orders according to condition，the results is ordered by created_at column desc
 - **Input Params**
   - account_id
   - status (order's status, if not provided, find account's all orders)
   - symbol
   - side
-  - date_range(order's trade date range, if not provided, find account's orders current day)
+  - startTime (Such as 1746720000000, it is 2025-05-09 00:00:00)
+  - endTime (Such as 1746806399000, it is 2025-05-09 23:59:59)
   - limit (pageSize)
   - skip (offset)
 - **Return Data Fields**

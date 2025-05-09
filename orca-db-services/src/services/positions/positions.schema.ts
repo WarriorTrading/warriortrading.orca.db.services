@@ -45,10 +45,7 @@ export const positionDataValidator = getValidator(positionDataSchema, dataValida
 export const positionDataResolver = resolve<Position, HookContext<PositionService>>({
   total_qty: async () => 0,
   frozen_qty: async () => 0,
-  realized_pl: async () => 0,
-  created_at: async () => Date.now(),
-  updated_at: async () => Date.now(),
-  closed_at: async () => 0 // Default to opened
+  realized_pl: async () => 0
 })
 
 // Schema for updating existing entries
@@ -62,7 +59,7 @@ export const positionPatchResolver = resolve<Position, HookContext<PositionServi
 })
 
 // Schema for allowed query properties
-export const positionQueryProperties = Type.Pick(positionSchema, ['id', 'account_id', 'symbol'])
+export const positionQueryProperties = Type.Pick(positionSchema, ['id', 'account_id', 'symbol', 'created_at'])
 export const positionQuerySchema = Type.Intersect(
   [
     querySyntax(positionQueryProperties),

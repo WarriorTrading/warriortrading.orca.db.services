@@ -5,6 +5,8 @@ import type { KnexAdapterParams, KnexAdapterOptions } from '@feathersjs/knex'
 
 import type { Application } from '../../declarations'
 import type { Position, PositionData, PositionPatch, PositionQuery } from './positions.schema'
+import type { PaginationOptions } from '@feathersjs/feathers'
+import type { Paginated } from '@feathersjs/feathers'
 
 export type { Position, PositionData, PositionPatch, PositionQuery }
 
@@ -16,12 +18,27 @@ export class PositionService<ServiceParams extends Params = PositionParams> exte
   PositionData,
   PositionParams,
   PositionPatch
-> {}
+> {
+  find(params?: PositionParams & { paginate?: PaginationOptions }): Promise<Paginated<Position>>;
+  find(params?: PositionParams): Promise<Position[]>;
+  find(params?: PositionParams): Promise<Paginated<Position> | Position[]> {
+    const query = params?.query || {}
+    return super.find({
+      ...params,
+      query: {
+        ...query,
+        $sort: {
+          created_at: -1
+        }
+      }
+    })
+  }
+}
 
 export const getOptions = (app: Application): KnexAdapterOptions => {
   return {
     paginate: app.get('paginate'),
     Model: app.get('postgresqlClient'),
-    name: 'positions'
+    name: 'orca_sim_position'
   }
 }

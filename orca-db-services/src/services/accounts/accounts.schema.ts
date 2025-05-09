@@ -34,11 +34,9 @@ export const accountDataSchema = Type.Pick(accountSchema, ['id', 'user_id', 'ori
 export type AccountData = Static<typeof accountDataSchema>
 export const accountDataValidator = getValidator(accountDataSchema, dataValidator)
 export const accountDataResolver = resolve<Account, HookContext<AccountService>>({
-  status: async () => 1, // Default to Active
+  status: async () => 1, // Default to active
   cost: async () => 0,
-  frozen_payment: async () => 0,
-  created_at: async () => Date.now(),
-  updated_at: async () => Date.now()
+  frozen_payment: async () => 0
 })
 
 // Schema for updating existing entries
