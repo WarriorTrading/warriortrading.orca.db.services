@@ -29,9 +29,17 @@ export const positionSchema = Type.Object(
 )
 export type Position = Static<typeof positionSchema>
 export const positionValidator = getValidator(positionSchema, dataValidator)
-export const positionResolver = resolve<Position, HookContext<PositionService>>({})
+export const positionResolver = resolve<Position, HookContext<PositionService>>({
+  created_at: async (value) => value ? parseInt(value.toString()) : 0,
+  updated_at: async (value) => value ? parseInt(value.toString()) : 0,
+  closed_at: async (value) => value ? parseInt(value.toString()) : 0
+})
 
-export const positionExternalResolver = resolve<Position, HookContext<PositionService>>({})
+export const positionExternalResolver = resolve<Position, HookContext<PositionService>>({
+  created_at: async (value) => value ? parseInt(value.toString()) : 0,
+  updated_at: async (value) => value ? parseInt(value.toString()) : 0,
+  closed_at: async (value) => value ? parseInt(value.toString()) : 0
+})
 
 // Schema for creating new entries
 export const positionDataSchema = Type.Object({

@@ -11,6 +11,6 @@
   },
   "postgresql": {
     "client": "pg",
-    "connection": "postgres://postgres:rick400918@localhost:5432/orca-sim"
+    "connection": "postgres://postgres:rick400918@localhost:5432/orca_sim"
   }
 }

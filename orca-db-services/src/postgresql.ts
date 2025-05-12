@@ -19,5 +19,15 @@ export const postgresql = (app: Application) => {
   const config = app.get('postgresql')
   const db = knex(config!)
 
+  // Add SQL query logging
+  db.on('query', (queryData: any) => {
+    console.log('SQL Query:', {
+      sql: queryData.sql,
+      bindings: queryData.bindings,
+      method: queryData.method,
+      options: queryData.options
+    })
+  })
+
   app.set('postgresqlClient', db)
 }
