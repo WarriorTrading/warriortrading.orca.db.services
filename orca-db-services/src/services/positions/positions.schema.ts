@@ -50,7 +50,10 @@ export const positionDataSchema = Type.Object({
   position_type: Type.Integer({ minimum: 1, maximum: 2 }), // 1:Long Position 2:Short Position
   avg_price: Type.Integer(), // unit $0.0001
   qty: Type.Integer(),
-  executions: Type.String() // execution list string
+  executions: Type.String(), // execution list string
+  total_qty: Type.Integer(),
+  frozen_qty: Type.Integer(),
+  realized_pl: Type.Number()
 }, {
   $id: 'PositionData',
   additionalProperties: false
@@ -58,9 +61,9 @@ export const positionDataSchema = Type.Object({
 export type PositionData = Static<typeof positionDataSchema>
 export const positionDataValidator = getValidator(positionDataSchema, dataValidator)
 export const positionDataResolver = resolve<Position, HookContext<PositionService>>({
-  total_qty: async () => 0,
-  frozen_qty: async () => 0,
-  realized_pl: async () => 0
+  realized_pl: async (value, data) => typeof value !== 'undefined' ? value : 0,
+  total_qty: async (value, data) => typeof value !== 'undefined' ? value : 0,
+  frozen_qty: async (value, data) => typeof value !== 'undefined' ? value : 0
 })
 
 // Schema for updating existing entries

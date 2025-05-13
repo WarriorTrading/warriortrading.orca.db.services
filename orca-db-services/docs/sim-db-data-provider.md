@@ -447,9 +447,9 @@ Find/Get/Create/Patch
       "account_id":"A11",
       "symbol":"AAPL",
       "position_type":1,
-      "avg_price":1507200
+      "avg_price":1507200,
       "qty":50,
-      "executions":"1001:$150.72:50"
+      "executions":"[{\"order_id\":\"1001\",\"price\":150720,\"qty\":50,\"side\":1}]",
       "total_qty":50,
       "frozen_qty":0,
       "realized_pl":0
@@ -493,7 +493,7 @@ Find/Get/Create/Patch
       "user_id": "U12",
       "account_id":"A11",
       "symbol":"AAPL",
-      "executions":"1002:$154.72:30"
+      "executions":"[{\"order_id\":\"276A2D6734B94B1E80E888409EBBC96C\",\"price\":116650,\"qty\":20,\"side\":1}]",
       "total_qty":80,
       "frozen_qty":0,
       "realized_pl":130.54
