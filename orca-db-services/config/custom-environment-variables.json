@@ -1,0 +1,20 @@
+{
+  "port": {
+    "__name": "PORT",
+    "__format": "number"
+  },
+  "host": "HOSTNAME",
+  "authentication": {
+    "secret": "FEATHERS_SECRET"
+  },
+
+  "postgresql": {
+    "client": "pg",
+    "connection": {"host":"ORCA_PG_HOST","port":"ORCA_PG_PORT","user":"ORCA_PG_USER","password":"ORCA_PG_PASSWORD","database":"ORCA_PG_DATABASE"},
+    "database": "ORCA_PG_DATABASE",
+    "host": "ORCA_PG_HOST",
+    "password": "ORCA_PG_PASSWORD",
+    "port": "ORCA_PG_PORT",
+    "user": "ORCA_PG_USER"
+  }
+}

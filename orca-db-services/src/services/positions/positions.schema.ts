@@ -1,0 +1,93 @@
+// // For more information about this file see https://dove.feathersjs.com/guides/cli/service.schemas.html
+import { resolve } from '@feathersjs/schema'
+import { Type, getValidator, querySyntax } from '@feathersjs/typebox'
+import type { Static } from '@feathersjs/typebox'
+
+import type { HookContext } from '../../declarations.js'
+import { dataValidator, queryValidator } from '../../validators.js'
+import type { PositionService } from './positions.class.js'
+
+// Main data model schema
+export const positionSchema = Type.Object(
+  {
+    id: Type.String(),
+    user_id: Type.String(),
+    account_id: Type.String(),
+    symbol: Type.String(),
+    position_type: Type.Integer({ minimum: 1, maximum: 2 }), // 1:Long Position 2:Short Position
+    avg_price: Type.Integer(), // unit $0.0001
+    qty: Type.Integer(),
+    total_qty: Type.Integer(), // accumulative trade orders' qty today
+    realized_pl: Type.Number(), // realized Profit & Loss amount
+    frozen_qty: Type.Integer(),
+    executions: Type.String(), // execution list string
+    created_at: Type.Integer(), // timestamp in milliseconds
+    updated_at: Type.Integer(), // timestamp in milliseconds
+    closed_at: Type.Integer() // timestamp in milliseconds, 0 means opened
+  },
+  { $id: 'Position', additionalProperties: false }
+)
+export type Position = Static<typeof positionSchema>
+export const positionValidator = getValidator(positionSchema, dataValidator)
+export const positionResolver = resolve<Position, HookContext<PositionService>>({
+  created_at: async (value) => value ? parseInt(value.toString()) : 0,
+  updated_at: async (value) => value ? parseInt(value.toString()) : 0,
+  closed_at: async (value) => value ? parseInt(value.toString()) : 0
+})
+
+export const positionExternalResolver = resolve<Position, HookContext<PositionService>>({
+  created_at: async (value) => value ? parseInt(value.toString()) : 0,
+  updated_at: async (value) => value ? parseInt(value.toString()) : 0,
+  closed_at: async (value) => value ? parseInt(value.toString()) : 0
+})
+
+// Schema for creating new entries
+export const positionDataSchema = Type.Object({
+  id: Type.String(),
+  user_id: Type.String(),
+  account_id: Type.String(),
+  symbol: Type.String(),
+  position_type: Type.Integer({ minimum: 1, maximum: 2 }), // 1:Long Position 2:Short Position
+  avg_price: Type.Integer(), // unit $0.0001
+  qty: Type.Integer(),
+  executions: Type.String(), // execution list string
+  total_qty: Type.Integer(),
+  frozen_qty: Type.Integer(),
+  realized_pl: Type.Number()
+}, {
+  $id: 'PositionData',
+  additionalProperties: false
+})
+export type PositionData = Static<typeof positionDataSchema>
+export const positionDataValidator = getValidator(positionDataSchema, dataValidator)
+export const positionDataResolver = resolve<Position, HookContext<PositionService>>({
+  realized_pl: async (value, data) => typeof value !== 'undefined' ? value : 0,
+  total_qty: async (value, data) => typeof value !== 'undefined' ? value : 0,
+  frozen_qty: async (value, data) => typeof value !== 'undefined' ? value : 0
+})
+
+// Schema for updating existing entries
+export const positionPatchSchema = Type.Partial(positionSchema, {
+  $id: 'PositionPatch'
+})
+export type PositionPatch = Static<typeof positionPatchSchema>
+export const positionPatchValidator = getValidator(positionPatchSchema, dataValidator)
+export const positionPatchResolver = resolve<Position, HookContext<PositionService>>({
+  updated_at: async () => Date.now()
+})
+
+// Schema for allowed query properties
+export const positionQueryProperties = Type.Pick(positionSchema, ['id', 'account_id', 'symbol', 'created_at'])
+export const positionQuerySchema = Type.Intersect(
+  [
+    querySyntax(positionQueryProperties),
+    Type.Object({
+      limit: Type.Optional(Type.Integer()),
+      skip: Type.Optional(Type.Integer())
+    }, { additionalProperties: false })
+  ],
+  { additionalProperties: false }
+)
+export type PositionQuery = Static<typeof positionQuerySchema>
+export const positionQueryValidator = getValidator(positionQuerySchema, queryValidator)
+export const positionQueryResolver = resolve<PositionQuery, HookContext<PositionService>>({})
