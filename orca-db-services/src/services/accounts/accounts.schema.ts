@@ -23,9 +23,15 @@ export const accountSchema = Type.Object(
 )
 export type Account = Static<typeof accountSchema>
 export const accountValidator = getValidator(accountSchema, dataValidator)
-export const accountResolver = resolve<Account, HookContext<AccountService>>({})
+export const accountResolver = resolve<Account, HookContext<AccountService>>({
+  created_at: async (value) => value ? parseInt(value.toString()) : 0,
+  updated_at: async (value) => value ? parseInt(value.toString()) : 0
+})
 
-export const accountExternalResolver = resolve<Account, HookContext<AccountService>>({})
+export const accountExternalResolver = resolve<Account, HookContext<AccountService>>({
+  created_at: async (value) => value ? parseInt(value.toString()) : 0,
+  updated_at: async (value) => value ? parseInt(value.toString()) : 0
+})
 
 // Schema for creating new entries
 export const accountDataSchema = Type.Object({

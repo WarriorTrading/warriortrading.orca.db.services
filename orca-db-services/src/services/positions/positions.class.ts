@@ -42,10 +42,6 @@ export class PositionService extends KnexService<
       }
     } as PositionParams)
   }
-
-  async get(id: string, params?: PositionParams): Promise<Position> {
-    return super.get(id, params)
-  }
 }
 
 export const getOptions = (app: Application): KnexAdapterOptions => {

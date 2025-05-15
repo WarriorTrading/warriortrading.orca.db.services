@@ -25,12 +25,7 @@ export class AccountService<ServiceParams extends AccountParams = AccountParams>
   AccountData,
   ServiceParams,
   AccountPatch
-> {
-  async get(id: string, params?: ServiceParams): Promise<Account> {
-    const result = await super.get(id, params)
-    return result
-  }
-}
+> {}
 
 export const getOptions = (app: Application): KnexAdapterOptions => {
   return {

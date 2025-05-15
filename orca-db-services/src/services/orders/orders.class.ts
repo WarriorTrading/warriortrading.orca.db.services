@@ -57,11 +57,6 @@ export class OrderService extends KnexService<
       query: finalQuery
     } as OrderParams)
   }
-
-  async get(id: string, params?: OrderParams): Promise<Order> {
-    const result = await super.get(id, params)
-    return result
-  }
 }
 
 export const getOptions = (app: Application): KnexAdapterOptions => {

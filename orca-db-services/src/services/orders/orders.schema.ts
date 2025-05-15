@@ -35,9 +35,15 @@ export const orderSchema = Type.Object(
 )
 export type Order = Static<typeof orderSchema>
 export const orderValidator = getValidator(orderSchema, dataValidator)
-export const orderResolver = resolve<Order, HookContext<OrderService>>({})
+export const orderResolver = resolve<Order, HookContext<OrderService>>({
+  created_at: async (value) => value ? parseInt(value.toString()) : 0,
+  updated_at: async (value) => value ? parseInt(value.toString()) : 0
+})
 
-export const orderExternalResolver = resolve<Order, HookContext<OrderService>>({})
+export const orderExternalResolver = resolve<Order, HookContext<OrderService>>({
+  created_at: async (value) => value ? parseInt(value.toString()) : 0,
+  updated_at: async (value) => value ? parseInt(value.toString()) : 0
+})
 
 // Schema for creating new entries
 export const orderDataSchema = Type.Object({
