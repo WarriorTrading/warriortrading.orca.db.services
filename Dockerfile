@@ -23,12 +23,11 @@ COPY --from=builder /workspace/node_modules node_modules
 COPY --from=builder /workspace/lib lib
 COPY --from=builder /workspace/config config
 COPY --from=builder /workspace/package.json package.json
-COPY --from=builder /workspace/knexfile.js
+COPY --from=builder /workspace/knexfile.js knexfile.js
 COPY --from=builder /workspace/connection.js connection.js
 COPY --from=builder /workspace/migrations migrations
 COPY --from=builder /workspace/public public
 
 RUN yarn global add knex@3.1
 
-CMD ["npm", "run migrate"]
 CMD ["npm", "start"]
