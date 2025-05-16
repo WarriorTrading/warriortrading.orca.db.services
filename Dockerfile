@@ -26,6 +26,6 @@ COPY --from=builder /workspace/public public
 
 RUN yarn global add knex@3.1
 
-RUN npm run dev
+CMD ["npm", "start"]
 
 EXPOSE 4040
