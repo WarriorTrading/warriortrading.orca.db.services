@@ -26,7 +26,6 @@ COPY --from=builder /workspace/public public
 
 RUN yarn global add knex@3.1
 
-RUN npm run migrate
 RUN npm run dev
 
 EXPOSE 4040
