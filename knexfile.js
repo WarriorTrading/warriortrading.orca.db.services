@@ -16,7 +16,12 @@ console.log('[knexfile] Using database:', masked)
 
 export default {
   client: 'pg',
-  connection,
+  connection: {
+    connectionString: connection,
+    ssl: {
+      rejectUnauthorized: false,
+    },
+  },
   migrations: {
     directory: './migrations',
     tableName: 'knex_migrations'
