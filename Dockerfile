@@ -1,5 +1,5 @@
 # ---- build stage -----------------------------------------------------------
-FROM node:23.11.0-alpine AS builder
+FROM node:22.15-alpine AS builder
 
 WORKDIR /workspace
 
@@ -12,7 +12,7 @@ RUN npm run compile
 
 ############# Worker #############
 # ---- runtime stage ---------------------------------------------------------
-FROM node:23.11.0-alpine
+FROM node:22.15-alpine
 
 # single no-cache install keeps the image small and patched
 RUN apk add --no-cache coreutils tzdata
@@ -24,10 +24,11 @@ COPY --from=builder /workspace/lib lib
 COPY --from=builder /workspace/config config
 COPY --from=builder /workspace/package.json package.json
 COPY --from=builder /workspace/knexfile.js knexfile.js
-COPY --from=builder /workspace/connection.js connection.js
 COPY --from=builder /workspace/migrations migrations
 COPY --from=builder /workspace/public public
 
 RUN yarn global add knex@3.1
 
 CMD ["npm", "start"]
+
+EXPOSE 4040
