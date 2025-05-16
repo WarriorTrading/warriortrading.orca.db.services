@@ -2,7 +2,7 @@
 
 export default {
   client: 'pg',
-  connection: 'postgres://postgres:rick400918@localhost:5432/orca_sim',
+  connection: 'postgres://warrior:W-x3biMc9cZF@localhost:5432/orca_sim',
   migrations: {
     directory: './migrations',
     tableName: 'knex_migrations'
