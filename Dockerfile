@@ -1,11 +1,13 @@
 # ---- build stage -----------------------------------------------------------
-FROM node:22.15 AS builder
+FROM node:22.15-alpine AS builder
 
 WORKDIR /workspace
 
 ARG GITHUB_TOKEN_READ_WT_PACKAGES="GITHUB_TOKEN_READ_WT_PACKAGES"
 
 COPY . .
+
+RUN apk add busybox-extras 
 
 RUN npm install
 RUN npm run compile
