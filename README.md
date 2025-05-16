@@ -12,7 +12,7 @@ This project uses [Feathers](http://feathersjs.com). An open source framework fo
 2. Install your dependencies
 
     ```
-    cd path/to/orca-db-services
+    cd path/to/warriortrading.orca.db.services
     npm install
     ```
 
