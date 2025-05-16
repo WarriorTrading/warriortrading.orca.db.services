@@ -11,11 +11,11 @@
   },
   "postgresql": {
     "client": "pg",
-    "connection":"postgres://postgres:rick400918@localhost:5432/orca_sim",
+    "connection":"postgres://${postgresql.user}:${postgresql.password}@${postgresql.host}:${postgresql.port}/${postgresql.database}",
     "database": "orca_sim",
     "host": "localhost",
-    "password": "rick400918",
+    "password": "W-x3biMc9cZF",
     "port": "5432",
-    "user": "postgres"
+    "user": "warrior"
   }
 }
