@@ -16,6 +16,9 @@ const app: Application = koa(feathers())
 // Load our app configuration (see config/ folder)
 app.configure(configuration(configurationValidator))
 
+// Log PostgreSQL connection info
+console.log('PostgreSQL connection config:', app.get('postgresql'))
+
 // Set up Koa middleware
 app.use(cors())
 app.use(serveStatic(app.get('public')))
