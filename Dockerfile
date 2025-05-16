@@ -1,5 +1,5 @@
 # ---- build stage -----------------------------------------------------------
-FROM node:22.15-alpine AS builder
+FROM node:22.15 AS builder
 
 WORKDIR /workspace
 
@@ -12,10 +12,7 @@ RUN npm run compile
 
 ############# Worker #############
 # ---- runtime stage ---------------------------------------------------------
-FROM node:22.15-alpine
-
-# single no-cache install keeps the image small and patched
-RUN apk add --no-cache coreutils tzdata
+FROM node:22.15
 
 WORKDIR /workspace
 
