@@ -14,7 +14,7 @@ RUN npm run compile
 
 ############# Worker #############
 # ---- runtime stage ---------------------------------------------------------
-FROM node:22.15
+FROM node:22.15-alpine
 
 WORKDIR /workspace
 
