@@ -26,7 +26,9 @@ COPY --from=builder /workspace/knexfile.js knexfile.js
 COPY --from=builder /workspace/migrations migrations
 COPY --from=builder /workspace/public public
 
-RUN yarn global add knex@3.1
+# Install bash for easier debugging (kubectl exec /bin/bash)
+RUN apk add --no-cache bash \
+ && yarn global add knex@3.1
 
 CMD ["npm", "start"]
 
