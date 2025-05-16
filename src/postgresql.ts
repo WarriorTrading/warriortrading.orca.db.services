@@ -17,6 +17,13 @@ const knex = require('knex')
 
 export const postgresql = (app: Application) => {
   const config = app.get('postgresql')
+  // If the connection string still contains placeholders, build it from individual fields
+  if (typeof config?.connection === 'string' && config.connection.includes('${')) {
+    const { user, password, host, port, database } = config as any
+    config.connection = `postgres://${user}:${password}@${host}:${port}/${database}`
+    // Persist the resolved connection back to the app settings
+    app.set('postgresql', config)
+  }
   const db = knex(config!)
 
   // Add SQL query logging
