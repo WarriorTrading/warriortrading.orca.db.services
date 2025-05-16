@@ -10,6 +10,11 @@
 
   "postgresql": {
     "client": "pg",
-    "connection": "postgres://ORCA_PG_USER:ORCA_PG_PASSWORD@ORCA_PG_HOST:ORCA_PG_PORT@ORCA_PG_DATABASE"
+    "connection": "postgres://$ORCA_PG_USER:$ORCA_PG_PASSWORD@$ORCA_PG_HOST:$ORCA_PG_PORT@$ORCA_PG_DATABASE",
+    "database": "$ORCA_PG_DATABASE",
+    "host": "$ORCA_PG_HOST",
+    "password": "$ORCA_PG_PASSWORD",
+    "port": "$ORCA_PG_PORT",
+    "user": "$ORCA_PG_USER"
   }
 }
