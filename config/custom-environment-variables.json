@@ -10,11 +10,13 @@
 
   "postgresql": {
     "client": "pg",
-    "connection":"postgres://${postgresql.user}:${postgresql.password}@${postgresql.host}:${postgresql.port}/${postgresql.database}",
-    "database": "ORCA_PG_DATABASE",
-    "host": "ORCA_PG_HOST",
-    "password": "ORCA_PG_PASSWORD",
-    "port": "ORCA_PG_PORT",
-    "user": "ORCA_PG_USER"
+    "connection": {
+      "connectionString":"postgres://${postgresql.user}:${postgresql.password}@${postgresql.host}:${postgresql.port}/${postgresql.database}",
+      "host": "ORCA_PG_HOST",
+      "port": "ORCA_PG_PORT",
+      "user": "ORCA_PG_USER",
+      "password": "ORCA_PG_PASSWORD",
+      "database": "ORCA_PG_DATABASE"
+    }
   }
 }
