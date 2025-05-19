@@ -3,13 +3,13 @@ import { createRequire } from 'module'
 import type { Knex } from 'knex'
 import type { Application } from './declarations.js'
 import {connection} from "@feathersjs/authentication/lib/hooks/index.js";
+import {parseEnv} from "node:util";
 
 declare module './declarations.js' {
   interface Configuration {
     postgresqlConfig: {
       client: string
       connection: string | {
-        profile:string
         connectionString?: string
         host: string,
         port: number,
@@ -35,7 +35,7 @@ export const postgresql = (app: Application) => {
     if ('port' in config.connection && typeof config.connection.port === 'string') {
       config.connection.port = parseInt(config.connection.port, 10)
     }
-    console.log(config.connection.profile)
+    console.log(parseEnv("profile"))
     if (config.connection.host == 'localhost') {
        console.log(config.connection)
     }

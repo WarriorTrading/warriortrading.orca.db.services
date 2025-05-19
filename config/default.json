@@ -12,7 +12,6 @@
   "postgresqlConfig": {
     "client": "pg",
     "connection":{
-      "profile":"dev",
       "database": "orca_sim",
       "host": "localhost",
       "password": "W-x3biMc9cZF",

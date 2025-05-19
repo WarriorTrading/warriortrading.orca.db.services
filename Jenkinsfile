@@ -42,6 +42,7 @@ volumes: [emptyDirVolume(memory: false, mountPath: '/var/lib/docker')]) {
                     echo "start ===> 2.2. apply service"
                     env.IMAGE_TAG = "${build_config.image_tag}"
                     env.OVERLAY = "${branch_name}"
+                    env.profile = "deploy"
 
                     // update service-logging/base/base.yml
                             sh 'mv deploy/kustomize/orca-db-services/base/base.yml deploy/kustomize/orca-db-services/base/base.yml.bak \
