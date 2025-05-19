@@ -7,7 +7,7 @@
   "authentication": {
     "secret": "FEATHERS_SECRET"
   },
-
+  "profile":"deploy",
   "postgresql": {
     "client": "pg",
     "connection": {
