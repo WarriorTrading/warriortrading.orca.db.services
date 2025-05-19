@@ -32,6 +32,8 @@ COPY --from=builder /workspace/knexfile.js    knexfile.js
 COPY --from=builder /workspace/migrations     migrations
 COPY --from=builder /workspace/public         public
 
+ENV PROFILE deploy
+
 CMD ["npm", "start"]
 
 EXPOSE 4040
