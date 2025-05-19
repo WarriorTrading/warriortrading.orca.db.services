@@ -2,12 +2,21 @@
 import { createRequire } from 'module'
 import type { Knex } from 'knex'
 import type { Application } from './declarations.js'
+import {connection} from "@feathersjs/authentication/lib/hooks/index.js";
 
 declare module './declarations.js' {
   interface Configuration {
-    postgresql: {
+    postgresqlConfig: {
       client: string
-      connection: string
+      connection: string | {
+        connectionString?: string
+        host: string,
+        port: number,
+        user: string,
+        password: string,
+        database: string,
+        ssl?: string | boolean | object
+      }
     }
   }
 }
@@ -17,12 +26,28 @@ const knex = require('knex')
 
 export const postgresql = (app: Application) => {
   const config = app.get('postgresql')
+
+  // Convert port to number if needed
+  if (config && typeof config.connection === 'object' && config.connection !== null) {
+    if ('port' in config.connection && typeof config.connection.port === 'string') {
+      config.connection.port = parseInt(config.connection.port, 10)
+    }
+    // Optionally handle ssl as before, if you add it back
+    if ('ssl' in config.connection && typeof config.connection.ssl === 'string') {
+      try {
+        config.connection.ssl = JSON.parse(config.connection.ssl)
+      } catch {
+        config.connection.ssl = config.connection.ssl === 'true'
+      }
+    }
+  }
   // If the connection string still contains placeholders, build it from individual fields
   if (typeof config?.connection === 'string' && config.connection.includes('${')) {
     const { user, password, host, port, database } = config as any
     config.connection = `postgres://${user}:${password}@${host}:${port}/${database}`
     // Persist the resolved connection back to the app settings
     app.set('postgresql', config)
+    console.log(`connecting to ${host}:${port}/${database}`)
   }
   const db = knex(config!)
 

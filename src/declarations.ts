@@ -17,7 +17,15 @@ export interface Configuration extends ApplicationConfiguration {
   }
   postgresql: {
     client: string
-    connection: string
+    connection: string | {
+      connectionString?: string
+      host: string
+      port: number
+      user: string
+      password: string
+      database: string
+      ssl?: string | boolean | object
+    }
   }
   postgresqlClient: Knex
 }
