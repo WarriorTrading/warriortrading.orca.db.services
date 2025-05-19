@@ -6,10 +6,10 @@ import {connection} from "@feathersjs/authentication/lib/hooks/index.js";
 
 declare module './declarations.js' {
   interface Configuration {
-    profile:string
     postgresqlConfig: {
       client: string
       connection: string | {
+        profile:string
         connectionString?: string
         host: string,
         port: number,
@@ -27,7 +27,7 @@ const knex = require('knex')
 
 
 export const postgresql = (app: Application) => {
-  const config = app.get('postgresql')
+  const config = app.get('postgresqlConfig')
 
 
   // Convert port to number if needed
@@ -35,7 +35,7 @@ export const postgresql = (app: Application) => {
     if ('port' in config.connection && typeof config.connection.port === 'string') {
       config.connection.port = parseInt(config.connection.port, 10)
     }
-    const profile = app.get('profile')
+    const profile =  config.connection.profile
     console.log(profile)
     if (profile === 'dev') {
        console.log(config.connection)
