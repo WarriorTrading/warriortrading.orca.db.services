@@ -11,7 +11,6 @@
   "postgresql": {
     "client": "pg",
     "connection": {
-      "connectionString":"postgres://${postgresql.user}:${postgresql.password}@${postgresql.host}:${postgresql.port}/${postgresql.database}",
       "host": "ORCA_PG_HOST",
       "port": "ORCA_PG_PORT",
       "user": "ORCA_PG_USER",

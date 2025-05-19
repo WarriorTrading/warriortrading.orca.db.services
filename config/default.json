@@ -12,7 +12,6 @@
   "postgresql": {
     "client": "pg",
     "connection":{
-      "connectionString":"postgres://${postgresql.user}:${postgresql.password}@${postgresql.host}:${postgresql.port}/${postgresql.database}",
       "database": "orca_sim",
       "host": "localhost",
       "password": "W-x3biMc9cZF",
