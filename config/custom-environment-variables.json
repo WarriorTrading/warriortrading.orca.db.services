@@ -7,10 +7,10 @@
   "authentication": {
     "secret": "FEATHERS_SECRET"
   },
-  "profile":"deploy",
-  "postgresql": {
+  "postgresqlConfig": {
     "client": "pg",
     "connection": {
+      "profile":"deploy",
       "host": "ORCA_PG_HOST",
       "port": "ORCA_PG_PORT",
       "user": "ORCA_PG_USER",

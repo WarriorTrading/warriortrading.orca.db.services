@@ -9,10 +9,10 @@
     "default": 10,
     "max": 50
   },
-  "profile":"dev",
-  "postgresql": {
+  "postgresqlConfig": {
     "client": "pg",
     "connection":{
+      "profile":"dev",
       "database": "orca_sim",
       "host": "localhost",
       "password": "W-x3biMc9cZF",
