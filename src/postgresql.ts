@@ -35,9 +35,7 @@ export const postgresql = (app: Application) => {
     if ('port' in config.connection && typeof config.connection.port === 'string') {
       config.connection.port = parseInt(config.connection.port, 10)
     }
-    const profile =  config.connection.profile
-    console.log(profile)
-    if (profile === 'dev') {
+    if (config.connection.host == 'localhost') {
        console.log(config.connection)
     }
     else {
