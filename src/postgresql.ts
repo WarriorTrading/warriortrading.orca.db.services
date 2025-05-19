@@ -32,14 +32,8 @@ export const postgresql = (app: Application) => {
     if ('port' in config.connection && typeof config.connection.port === 'string') {
       config.connection.port = parseInt(config.connection.port, 10)
     }
-    // Optionally handle ssl as before, if you add it back
-    if ('ssl' in config.connection && typeof config.connection.ssl === 'string') {
-      try {
-        config.connection.ssl = JSON.parse(config.connection.ssl)
-      } catch {
-        config.connection.ssl = config.connection.ssl === 'true'
-      }
-    }
+    config.connection.ssl = {"rejectUnauthorized":false}
+    console.log(config.connection)
   }
   // If the connection string still contains placeholders, build it from individual fields
   if (typeof config?.connection === 'string' && config.connection.includes('${')) {
