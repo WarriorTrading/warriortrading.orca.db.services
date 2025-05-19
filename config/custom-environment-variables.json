@@ -10,7 +10,6 @@
   "postgresqlConfig": {
     "client": "pg",
     "connection": {
-      "profile":"qa",
       "host": "ORCA_PG_HOST",
       "port": "ORCA_PG_PORT",
       "user": "ORCA_PG_USER",
