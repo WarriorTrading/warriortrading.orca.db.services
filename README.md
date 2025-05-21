@@ -1,11 +1,3 @@
-# orca-db-services
-
-> This project establishes the service api for orca database.
-
-## About
-
-This project uses [Feathers](http://feathersjs.com). An open source framework for building APIs and real-time applications.
-
 ## Getting Started
 
 1. Make sure you have [NodeJS](https://nodejs.org/) and [npm](https://www.npmjs.com/) installed.
@@ -14,29 +6,27 @@ This project uses [Feathers](http://feathersjs.com). An open source framework fo
     ```
     cd path/to/warriortrading.orca.db.services
     npm install
-    ```
-
-3. Start your app
-
+   
+3. Make sure you have installed docker service and start docker service.
+4. Modify local_db/docker-compose.yaml, modify the port mapping,username,password and db name, run docker-compose up -d
+5. Modify config/default.json. Modify pg's connection info as your local pg's connection info.
+   Modify knexfile.js file, remove following code:
+   ```
+   ssl: {
+      rejectUnauthorized: false,
+    },
+   ```
+   set following environment variables as your local db pg info.
+   ```
+   ORCA_PG_USER,
+   ORCA_PG_PASSWORD,
+   ORCA_PG_HOST,
+   ORCA_PG_PORT,
+   ORCA_PG_DATABASE
+   ```
+6. start app
     ```
     npm run compile # Compile TypeScript source
     npm run migrate # Run migrations to set up the database
     npm start
     ```
-
-## Testing
-
-Run `npm test` and all your tests in the `test/` directory will be run.
-
-## Scaffolding
-
-This app comes with a powerful command line interface for Feathers. Here are a few things it can do:
-
-```
-$ npx feathers help                           # Show all commands
-$ npx feathers generate service               # Generate a new Service
-```
-
-## Help
-
-For more information on all the things you can do with Feathers visit [docs.feathersjs.com](http://docs.feathersjs.com).
