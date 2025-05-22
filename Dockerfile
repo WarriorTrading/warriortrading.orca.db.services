@@ -31,7 +31,6 @@ COPY --from=builder /workspace/package.json   package.json
 COPY --from=builder /workspace/knexfile.js    knexfile.js
 COPY --from=builder /workspace/migrations     migrations
 COPY --from=builder /workspace/public         public
-COPY --from=builder /workspace/tsconfig.json  tsconfig.json
 
 ENV PROFILE=deploy
 
