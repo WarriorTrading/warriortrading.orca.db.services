@@ -21,7 +21,7 @@ RUN apk add --no-cache \
       busybox-extras \
       postgresql-client \
       bash && \
-    yarn global add knex@3.1
+    npm install -g --force knex@3.1 ts-node typescript @types/node
 
 # copy application code after tools (keeps rebuilds fast)
 COPY --from=builder /workspace/node_modules node_modules
@@ -31,8 +31,10 @@ COPY --from=builder /workspace/package.json   package.json
 COPY --from=builder /workspace/knexfile.js    knexfile.js
 COPY --from=builder /workspace/migrations     migrations
 COPY --from=builder /workspace/public         public
+COPY --from=builder /workspace/tsconfig.json  tsconfig.json
 
-ENV PROFILE=deploy
+ENV PROFILE=default
+ENV NODE_OPTIONS='--loader ts-node/esm'
 
 CMD ["npm", "start"]
 

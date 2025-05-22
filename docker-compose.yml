@@ -2,24 +2,23 @@ version: '3.8'
 
 services:
   app:
-    build:
-      context: https://${GITHUB_USERNAME}:${GITHUB_PASSWORD}@github.com/WarriorTrading/warriortrading.orca.db.services.git#lucian-dev
-      dockerfile: Dockerfile
+    image: orca-db-services:lucian-dev
     ports:
-      - "3030:4040"
+      - "3030:3030"
     environment:
       - NODE_ENV=deploy
       - PROFILE=default
-      - ORCA_PG_USER=${ORCA_PG_USER:-postgres}
-      - ORCA_PG_PASSWORD=${ORCA_PG_PASSWORD:-postgres}
+      - ORCA_PG_USER=warrior
+      - ORCA_PG_PASSWORD=W-x3biMc9cZF
       - ORCA_PG_HOST=db
       - ORCA_PG_PORT=5432
-      - ORCA_PG_DATABASE=${ORCA_PG_DATABASE:-orca_db}
+      - ORCA_PG_DATABASE=orca_sim
       - ORCA_PG_SSL=false
+      - NODE_OPTIONS='--loader ts-node/esm'
     depends_on:
       db:
         condition: service_healthy
-    command: sh -c "npm run compile && npx knex migrate:latest && npm start"
+    command: sh -c "NODE_OPTIONS='--loader ts-node/esm' npx knex migrate:latest && npm start"
     networks:
       - orca-network
 
@@ -28,13 +27,13 @@ services:
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_USER=${ORCA_PG_USER:-postgres}
-      - POSTGRES_PASSWORD=${ORCA_PG_PASSWORD:-postgres}
-      - POSTGRES_DB=${ORCA_PG_DATABASE:-orca_db}
+      - POSTGRES_USER=warrior
+      - POSTGRES_PASSWORD=W-x3biMc9cZF
+      - POSTGRES_DB=orca_sim
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${ORCA_PG_USER:-postgres}"]
+      test: ["CMD-SHELL", "pg_isready -U warrior"]
       interval: 10s
       timeout: 5s
       retries: 5
