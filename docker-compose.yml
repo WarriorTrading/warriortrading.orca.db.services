@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: https://${GITHUB_USERNAME}:${GITHUB_PASSWORD}@github.com/WarriorTrading/warriortrading.orca.db.services.git#lucian-dev
+      dockerfile: Dockerfile
+    ports:
+      - "3030:4040"
+    environment:
+      - NODE_ENV=deploy
+      - PROFILE=default
+      - ORCA_PG_USER=${ORCA_PG_USER:-postgres}
+      - ORCA_PG_PASSWORD=${ORCA_PG_PASSWORD:-postgres}
+      - ORCA_PG_HOST=db
+      - ORCA_PG_PORT=5432
+      - ORCA_PG_DATABASE=${ORCA_PG_DATABASE:-orca_db}
+      - ORCA_PG_SSL=false
+    depends_on:
+      db:
+        condition: service_healthy
+    command: sh -c "npm run compile && npx knex migrate:latest && npm start"
+    networks:
+      - orca-network
+
+  db:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=${ORCA_PG_USER:-postgres}
+      - POSTGRES_PASSWORD=${ORCA_PG_PASSWORD:-postgres}
+      - POSTGRES_DB=${ORCA_PG_DATABASE:-orca_db}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${ORCA_PG_USER:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+    networks:
+      - orca-network
+
+volumes:
+  postgres_data:
+
+networks:
+  orca-network:
+    driver: bridge 
