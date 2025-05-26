@@ -3,7 +3,7 @@ name: Trigger Jenkins on PR Merge
 on:
   pull_request:
     branches:
-      - 'orca-dev'
+      - '**'
     types:
       - closed
 
