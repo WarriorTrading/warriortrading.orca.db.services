@@ -1,7 +1,7 @@
 {
   "name": "orca-db-services",
   "description": "This project establishes the service api for orca database.",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "homepage": "",
   "private": true,
