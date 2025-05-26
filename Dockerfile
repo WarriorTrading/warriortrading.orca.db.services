@@ -36,4 +36,4 @@ ENV PROFILE=deploy
 
 CMD ["npm", "start"]
 
-EXPOSE 4040
+EXPOSE 3030
