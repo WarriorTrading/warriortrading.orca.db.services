@@ -1,0 +1,13 @@
+version: '4'
+services:
+  postgres:
+    image: postgres:14
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'rick400918'
+      POSTGRES_DB: 'orca_sim'
+    volumes:
+      - ./postgres/data/postgres:/var/lib/postgresql/data

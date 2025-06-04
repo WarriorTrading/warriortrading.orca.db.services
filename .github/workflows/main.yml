@@ -1,0 +1,36 @@
+name: Trigger Jenkins on PR Merge
+
+on:
+  pull_request:
+    branches:
+      - '**'
+    types:
+      - closed
+
+jobs:
+  show-info:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get Node version
+        id: get_version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Show branch and version
+        run: |
+          echo "Branch name: ${{ github.ref_name }}"
+          echo "Project version: ${{ env.VERSION }}"
+
+      - name: Trigger Jenkins Multibranch Pipeline
+        env:
+          JENKINS_USER: ${{ secrets.JENKINS_USER }}
+          JENKINS_TOKEN: ${{ secrets.JENKINS_TOKEN }}
+        run: |
+          curl -X POST "https://builder2.warriortrading.com/job/orca.db.services/job/${{ github.ref_name }}/build" \
+            --user "${JENKINS_USER}:${JENKINS_TOKEN}"
