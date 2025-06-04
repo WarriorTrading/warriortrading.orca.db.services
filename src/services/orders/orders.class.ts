@@ -20,7 +20,6 @@ export interface OrderParams extends KnexAdapterParams<OrderQuery> {
     $and?: Array<{ [key: string]: any }>
     startTime?: number
     endTime?: number
-    status?: number | string | number[]
   }
 }
 
@@ -35,45 +34,13 @@ export class OrderService extends KnexService<
   async find(params?: OrderParams & { paginate: false }): Promise<Order[]>;
   async find(params?: OrderParams): Promise<Paginated<Order> | Order[]> {
     const query = params?.query || {}
-    const { startTime, endTime, status, ...restQuery } = query
+    const { startTime, endTime, ...restQuery } = query
 
     // Build the query with timestamp range if provided
-    const finalQuery: any = {
+    const finalQuery = {
       ...restQuery,
       $sort: {
         created_at: -1
-      }
-    }
-
-    // Handle multiple status values
-    if (status !== undefined) {
-      if (typeof status === 'string' && status.includes(',')) {
-        // Parse comma-separated status values
-        const statusArray = status.split(',')
-          .map(s => parseInt(s.trim(), 10))
-          .filter(s => !isNaN(s) && s >= 1 && s <= 6) // Validate status range
-        
-        if (statusArray.length > 0) {
-          finalQuery.status = { $in: statusArray }
-        }
-      } else if (Array.isArray(status)) {
-        // Handle array of status values
-        const statusArray = status
-          .map(s => typeof s === 'string' ? parseInt(s, 10) : s)
-          .filter(s => !isNaN(s) && s >= 1 && s <= 6) // Validate status range
-        
-        if (statusArray.length > 0) {
-          finalQuery.status = { $in: statusArray }
-        }
-      } else if (typeof status === 'number' && status >= 1 && status <= 6) {
-        // Handle single status value
-        finalQuery.status = status
-      } else if (typeof status === 'string') {
-        // Handle single status value as string
-        const statusNum = parseInt(status, 10)
-        if (!isNaN(statusNum) && statusNum >= 1 && statusNum <= 6) {
-          finalQuery.status = statusNum
-        }
       }
     }
 
