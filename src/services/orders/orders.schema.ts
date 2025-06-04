@@ -85,7 +85,7 @@ export const orderPatchResolver = resolve<Order, HookContext<OrderService>>({
 
 // Schema for allowed query properties
 export const orderQueryProperties = Type.Pick(orderSchema, [
-  'id', 'account_id', 'status', 'symbol', 'side', 'created_at'
+  'id', 'account_id', 'symbol', 'side', 'created_at'
 ])
 export const orderQuerySchema = Type.Intersect(
   [
@@ -94,7 +94,12 @@ export const orderQuerySchema = Type.Intersect(
       startTime: Type.Optional(Type.Integer()),
       endTime: Type.Optional(Type.Integer()),
       limit: Type.Optional(Type.Integer()),
-      skip: Type.Optional(Type.Integer())
+      skip: Type.Optional(Type.Integer()),
+      status: Type.Optional(Type.Union([
+        Type.Integer({ minimum: 1, maximum: 6 }),
+        Type.String(),
+        Type.Array(Type.Integer({ minimum: 1, maximum: 6 }))
+      ]))
     }, { additionalProperties: false })
   ],
   { additionalProperties: false }
