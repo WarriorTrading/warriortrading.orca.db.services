@@ -46,18 +46,7 @@ export interface ServiceTypes {}
 export type ClientApplication = Application<ServiceTypes, Configuration>
 
 export const createClient = (config: Configuration) => {
-  const socket = io(config.host, {
-    transports: ['websocket'],
-    forceNew: true,
-    reconnection: true,
-    timeout: 10000
-  })
-
   const client = feathers<ServiceTypes, Configuration>()
-
-  // Set up Socket.io client with the socket
-  const socketioClient = socketio as any
-  client.configure(socketioClient(socket))
 
   // Set up REST client
   const restClient = rest as any
