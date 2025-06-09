@@ -17,13 +17,13 @@ export const positionSchema = Type.Object(
     position_type: Type.Integer({ minimum: 1, maximum: 2 }), // 1:Long Position 2:Short Position
     avg_price: Type.Integer(), // unit $0.0001
     qty: Type.Integer(),
-    total_qty: Type.Integer(), // accumulative trade orders' qty today
-    realized_pl: Type.Number(), // realized Profit & Loss amount
-    frozen_qty: Type.Integer(),
+    total_qty: Type.Optional(Type.Integer()), // accumulative trade orders' qty today
+    realized_pl: Type.Optional(Type.Number()), // realized Profit & Loss amount
+    frozen_qty: Type.Optional(Type.Integer()),
     executions: Type.String(), // execution list string
-    created_at: Type.Integer(), // timestamp in milliseconds
-    updated_at: Type.Integer(), // timestamp in milliseconds
-    closed_at: Type.Integer() // timestamp in milliseconds, 0 means opened
+    created_at: Type.Optional(Type.Integer()), // timestamp in milliseconds
+    updated_at: Type.Optional(Type.Integer()), // timestamp in milliseconds
+    closed_at: Type.Optional(Type.Integer()) // timestamp in milliseconds, 0 means opened
   },
   { $id: 'Position', additionalProperties: false }
 )
@@ -51,9 +51,9 @@ export const positionDataSchema = Type.Object({
   avg_price: Type.Integer(), // unit $0.0001
   qty: Type.Integer(),
   executions: Type.String(), // execution list string
-  total_qty: Type.Integer(),
-  frozen_qty: Type.Integer(),
-  realized_pl: Type.Number()
+  total_qty: Type.Optional(Type.Integer()),
+  frozen_qty: Type.Optional(Type.Integer()),
+  realized_pl: Type.Optional(Type.Number())
 }, {
   $id: 'PositionData',
   additionalProperties: false
@@ -66,10 +66,16 @@ export const positionDataResolver = resolve<Position, HookContext<PositionServic
   frozen_qty: async (value, data) => typeof value !== 'undefined' ? value : 0
 })
 
-// Schema for updating existing entries
-export const positionPatchSchema = Type.Partial(positionSchema, {
-  $id: 'PositionPatch'
-})
+// Schema for updating existing entries - only allow modifiable fields
+export const positionPatchSchema = Type.Partial(
+  Type.Pick(positionSchema, [
+    'avg_price', 'qty', 'total_qty', 'realized_pl', 'frozen_qty', 
+    'executions', 'updated_at', 'closed_at'
+  ]),
+  {
+    $id: 'PositionPatch'
+  }
+)
 export type PositionPatch = Static<typeof positionPatchSchema>
 export const positionPatchValidator = getValidator(positionPatchSchema, dataValidator)
 export const positionPatchResolver = resolve<Position, HookContext<PositionService>>({

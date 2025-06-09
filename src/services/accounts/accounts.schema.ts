@@ -12,12 +12,12 @@ export const accountSchema = Type.Object(
   {
     id: Type.String(),
     user_id: Type.String(),
-    status: Type.Integer({ minimum: 1, maximum: 2 }), // 1:Active 2:Frozen
+    status: Type.Optional(Type.Integer({ minimum: 1, maximum: 2 })), // 1:Active 2:Frozen
     original_payment: Type.Integer(), // unit $0.0001
-    cost: Type.Integer(), // accumulated trade cost
-    frozen_payment: Type.Integer(), // unit $0.0001
-    created_at: Type.Integer(), // timestamp in milliseconds
-    updated_at: Type.Integer() // timestamp in milliseconds
+    cost: Type.Optional(Type.Integer()), // accumulated trade cost
+    frozen_payment: Type.Optional(Type.Integer()), // unit $0.0001
+    created_at: Type.Optional(Type.Integer()), // timestamp in milliseconds
+    updated_at: Type.Optional(Type.Integer()) // timestamp in milliseconds
   },
   { $id: 'Account', additionalProperties: false }
 )
@@ -51,13 +51,16 @@ export const accountDataResolver = resolve<Account, HookContext<AccountService>>
 })
 
 // Schema for updating existing entries
-export const accountPatchSchema = Type.Partial(accountSchema, {
-  $id: 'AccountPatch'
-})
+export const accountPatchSchema = Type.Partial(
+  Type.Pick(accountSchema, ['status', 'original_payment', 'cost', 'frozen_payment', 'updated_at']),
+  {
+    $id: 'AccountPatch'
+  }
+)
 export type AccountPatch = Static<typeof accountPatchSchema>
 export const accountPatchValidator = getValidator(accountPatchSchema, dataValidator)
 export const accountPatchResolver = resolve<Account, HookContext<AccountService>>({
-  updated_at: async () => Date.now()
+  updated_at: async (value) => value ? parseInt(value.toString()) : 0
 })
 
 // Schema for allowed query properties

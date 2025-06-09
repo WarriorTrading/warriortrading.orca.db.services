@@ -30,7 +30,29 @@ export default {
     patch: [
       async (hook: HookContext) => {
         if (hook.data != null) {
+          // Remove fields that should never be modified
           delete hook.data.created_at;
+          delete hook.data.user_id;
+          
+          // For orders, remove additional protected fields
+          if (hook.path === 'orders') {
+            delete hook.data.account_id;
+            delete hook.data.symbol;
+            delete hook.data.exchange_code;
+            delete hook.data.side;
+            delete hook.data.order_type;
+            delete hook.data.trade_type;
+            delete hook.data.price;
+            delete hook.data.qty;
+          }
+          
+          // For positions, remove additional protected fields
+          if (hook.path === 'positions') {
+            delete hook.data.account_id;
+            delete hook.data.symbol;
+            delete hook.data.position_type;
+          }
+          
           const now = new Date().getTime();
           hook.data.updated_at = now;
           if (hook.data.closed_at != null) {
