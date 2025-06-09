@@ -1,0 +1,72 @@
+###  DEPLOY  ###
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orca-db-services-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: orca-db-services-pod
+      app: orca-db-services-app
+  template:
+    metadata:
+      name: orca-db-services-pod
+      labels:
+        name: orca-db-services-pod
+        app: orca-db-services-app
+    spec:
+      imagePullSecrets:
+        - name: dockerhub-token-warriortrading
+      containers:
+        - envFrom:
+            - secretRef:
+                name: orca.pg
+          image: warriortrading/orca-db-services:###IMAGE_TAG###
+          name: orca-db-services
+          resources:
+            limits:
+              cpu: '300m'
+              memory: '750M'
+            requests:
+              cpu: '200m'
+              memory: '500M'
+          ports:
+            - containerPort: 3030
+          readinessProbe:
+            exec:
+              command:
+                - cat
+                - /tmp/isAppInited
+            initialDelaySeconds: 3
+            periodSeconds: 3
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - "now=$(date -u +%s);restart=$(cat /workspace/restart.txt | grep restart | awk '{print int($2)}');test $(($restart-$now)) -gt 0"
+            failureThreshold: 1
+            initialDelaySeconds: 600
+            periodSeconds: 600
+          command: ['/bin/sh', '-c']
+          args:
+            - echo "restart $(TZ=America/New_York date -d 'tomorrow 00:01:01' +%s)" > /workspace/restart.txt;
+              npm start;
+      restartPolicy: Always
+
+---
+###  SERVICE  ###
+apiVersion: v1
+kind: Service
+metadata:
+  name: orca-db-services
+spec:
+  type: ClusterIP
+  ports:
+    - port: 3030
+      targetPort: 3030
+      protocol: TCP
+  selector:
+    name: orca-db-services-pod
+    app: orca-db-services-app
