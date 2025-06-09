@@ -14,22 +14,22 @@ export const orderSchema = Type.Object(
     user_id: Type.String(),
     account_id: Type.String(),
     symbol: Type.String(),
-    exchange_code: Type.String(),
+    exchange_code: Type.Optional(Type.String()),
     side: Type.Integer({ minimum: 1, maximum: 3 }), // 1:buy 2:sell 3:sell short
     order_type: Type.Integer({ minimum: 1, maximum: 2 }), // 1:market order 2:limit order
-    trade_type: Type.Integer({ minimum: 1, maximum: 3 }), // 1:day 2:gtc 3:ioc
-    status: Type.Integer({ minimum: 1, maximum: 6 }), // 1:NEW 2:VALIDATED 3:FILLED 4:REJECTED 5:EXPIRED 6:CANCELLED
-    is_cancelling: Type.Boolean(),
+    trade_type: Type.Optional(Type.Integer({ minimum: 1, maximum: 3 })), // 1:day 2:gtc 3:ioc
+    status: Type.Optional(Type.Integer({ minimum: 1, maximum: 6 })), // 1:NEW 2:VALIDATED 3:FILLED 4:REJECTED 5:EXPIRED 6:CANCELLED
+    is_cancelling: Type.Optional(Type.Boolean()),
     price: Type.Integer(), // unit $0.0001
-    avg_exec_price: Type.Integer(), // unit $0.0001
+    avg_exec_price: Type.Optional(Type.Integer()), // unit $0.0001
     qty: Type.Integer(),
-    filled_qty: Type.Integer(),
-    cost: Type.Integer(), // buy: avg price * qty; sell: - avg price * qty
-    frozen_payment: Type.Integer(), // unit $0.0001
-    frozen_qty: Type.Integer(),
+    filled_qty: Type.Optional(Type.Integer()),
+    cost: Type.Optional(Type.Integer()), // buy: avg price * qty; sell: - avg price * qty
+    frozen_payment: Type.Optional(Type.Integer()), // unit $0.0001
+    frozen_qty: Type.Optional(Type.Integer()),
     rejection_reason: Type.Optional(Type.String()),
-    created_at: Type.Integer(), // timestamp in milliseconds
-    updated_at: Type.Integer() // timestamp in milliseconds
+    created_at: Type.Optional(Type.Integer()), // timestamp in milliseconds
+    updated_at: Type.Optional(Type.Integer()) // timestamp in milliseconds
   },
   { $id: 'Order', additionalProperties: false }
 )
@@ -51,10 +51,10 @@ export const orderDataSchema = Type.Object({
   user_id: Type.String(),
   account_id: Type.String(),
   symbol: Type.String(),
-  exchange_code: Type.String(),
+  exchange_code: Type.Optional(Type.String()),
   side: Type.Integer({ minimum: 1, maximum: 3 }), // 1:buy 2:sell 3:sell short
   order_type: Type.Integer({ minimum: 1, maximum: 2 }), // 1:market order 2:limit order
-  trade_type: Type.Integer({ minimum: 1, maximum: 3 }), // 1:day 2:gtc 3:ioc
+  trade_type: Type.Optional(Type.Integer({ minimum: 1, maximum: 3 })), // 1:day 2:gtc 3:ioc
   price: Type.Integer(), // unit $0.0001
   qty: Type.Integer()
 }, {
@@ -73,10 +73,16 @@ export const orderDataResolver = resolve<Order, HookContext<OrderService>>({
   frozen_qty: async () => 0
 })
 
-// Schema for updating existing entries
-export const orderPatchSchema = Type.Partial(orderSchema, {
-  $id: 'OrderPatch'
-})
+// Schema for updating existing entries - only allow modifiable fields
+export const orderPatchSchema = Type.Partial(
+  Type.Pick(orderSchema, [
+    'status', 'is_cancelling', 'avg_exec_price', 'filled_qty', 'cost', 
+    'frozen_payment', 'frozen_qty', 'rejection_reason', 'updated_at'
+  ]),
+  {
+    $id: 'OrderPatch'
+  }
+)
 export type OrderPatch = Static<typeof orderPatchSchema>
 export const orderPatchValidator = getValidator(orderPatchSchema, dataValidator)
 export const orderPatchResolver = resolve<Order, HookContext<OrderService>>({

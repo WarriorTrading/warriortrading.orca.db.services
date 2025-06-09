@@ -2,7 +2,10 @@
 import type { Knex } from 'knex'
 
 export async function up(knex: Knex): Promise<void> {
-  await knex.schema.createTable('orca_sim_position', table => {
+  // Check if table exists before creating
+  const hasTable = await knex.schema.hasTable('orca_sim_position')
+  if (!hasTable) {
+    await knex.schema.createTable('orca_sim_position', table => {
     table.string('id', 50).primary().comment('account\'s position id primary key')
     table.bigInteger('user_id').notNullable().comment('User\'s ID')
     table.string('account_id', 50).notNullable().comment('User\'s account id')
@@ -14,9 +17,9 @@ export async function up(knex: Knex): Promise<void> {
     table.decimal('realized_pl', 20, 4).notNullable().defaultTo(0).comment('The order\'s realized Profit & Loss amount')
     table.integer('frozen_qty').notNullable().defaultTo(0).comment('The position\'s frozen quantity')
     table.json('executions').notNullable().comment('The position\'s execution list string, including each order\'s id, price and qty')
-    table.timestamp('created_at', { useTz: true }).notNullable().defaultTo(knex.fn.now()).comment('The timestamp of position\'s created time(accurate to milliseconds)')
-    table.timestamp('updated_at', { useTz: true }).notNullable().defaultTo(knex.fn.now()).comment('The timestamp of position\'s latest updated time(accurate to milliseconds)')
-    table.timestamp('closed_at', { useTz: true }).notNullable().defaultTo(knex.fn.now()).comment('The timestamp of position\'s closed time(accurate to milliseconds), default is 0, means opened')
+    table.bigInteger('created_at').notNullable().defaultTo(knex.raw('EXTRACT(EPOCH FROM CURRENT_TIMESTAMP) * 1000')).comment('The timestamp of position\'s created time(accurate to milliseconds)')
+    table.bigInteger('updated_at').notNullable().defaultTo(knex.raw('EXTRACT(EPOCH FROM CURRENT_TIMESTAMP) * 1000')).comment('The timestamp of position\'s latest updated time(accurate to milliseconds)')
+    table.bigInteger('closed_at').notNullable().defaultTo(0).comment('The timestamp of position\'s closed time in ms, 0 means opened')
 
     // Add indexes
     table.index('user_id')
@@ -24,9 +27,14 @@ export async function up(knex: Knex): Promise<void> {
     table.index('symbol')
     table.index('position_type')
     table.index('created_at')
-  })
+    })
+  }
 }
 
 export async function down(knex: Knex): Promise<void> {
-  await knex.schema.dropTable('orca_sim_position')
+  // Check if table exists before dropping
+  const hasTable = await knex.schema.hasTable('orca_sim_position')
+  if (hasTable) {
+    await knex.schema.dropTable('orca_sim_position')
+  }
 }

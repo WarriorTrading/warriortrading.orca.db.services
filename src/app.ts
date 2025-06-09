@@ -2,7 +2,6 @@
 import { feathers } from '@feathersjs/feathers'
 import configuration from '@feathersjs/configuration'
 import { koa, rest, bodyParser, errorHandler, parseAuthentication, cors, serveStatic } from '@feathersjs/koa'
-import socketio from '@feathersjs/socketio'
 
 import { configurationValidator } from './configuration.js'
 import type { Application } from './declarations.js'
@@ -25,13 +24,6 @@ app.use(bodyParser())
 
 // Configure services and transports
 app.configure(rest())
-app.configure(
-  socketio({
-    cors: {
-      origin: app.get('origins')
-    }
-  })
-)
 app.configure(postgresql)
 // Log PostgreSQL connection info (after resolution)
 console.log('PostgreSQL connection config:', app.get('postgresql'))

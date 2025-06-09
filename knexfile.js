@@ -14,14 +14,26 @@ const connection = `postgres://${ORCA_PG_USER}:${ORCA_PG_PASSWORD}@${ORCA_PG_HOS
 const masked = connection.replace(/:\S+@/, ':****@')
 console.log('[knexfile] Using database:', masked)
 
-export default {
-  client: 'pg',
-  connection: {
+const profile = process.env.PROFILE || 'default'
+console.log('[knexfile] Using profile:', profile)
+
+let connectionConfig
+if (profile == "default") {
+  connectionConfig = {
+    connectionString: connection,
+  }
+} else {
+  connectionConfig = {
     connectionString: connection,
     ssl: {
       rejectUnauthorized: false,
     },
-  },
+  }
+}
+
+export default {
+  client: 'pg',
+  connection: connectionConfig,
   migrations: {
     directory: './migrations',
     tableName: 'knex_migrations'

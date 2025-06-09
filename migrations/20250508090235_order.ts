@@ -2,7 +2,10 @@
 import type { Knex } from 'knex'
 
 export async function up(knex: Knex): Promise<void> {
-  await knex.schema.createTable('orca_sim_order', table => {
+  // Check if table exists before creating
+  const hasTable = await knex.schema.hasTable('orca_sim_order')
+  if (!hasTable) {
+    await knex.schema.createTable('orca_sim_order', table => {
     table.string('id', 50).primary().comment('account\'s order id primary key')
     table.bigInteger('user_id').notNullable().comment('User\'s ID')
     table.string('account_id', 50).notNullable().comment('User\'s account id')
@@ -21,8 +24,8 @@ export async function up(knex: Knex): Promise<void> {
     table.bigInteger('frozen_payment').notNullable().defaultTo(0).comment('The frozen account\'s balance of this order,unit:$0.0001')
     table.integer('frozen_qty').notNullable().defaultTo(0).comment('The frozen quantity of this order')
     table.string('rejection_reason').comment('The order\'s rejection reason')
-    table.timestamp('created_at', { useTz: true }).notNullable().defaultTo(knex.fn.now()).comment('The timestamp of order\'s created time(accurate to milliseconds)')
-    table.timestamp('updated_at', { useTz: true }).notNullable().defaultTo(knex.fn.now()).comment('The timestamp of order\'s latest updated time(accurate to milliseconds)')
+    table.bigInteger('created_at').notNullable().defaultTo(knex.raw('EXTRACT(EPOCH FROM CURRENT_TIMESTAMP) * 1000')).comment('The timestamp of order\'s created time(accurate to milliseconds)')
+    table.bigInteger('updated_at').notNullable().defaultTo(knex.raw('EXTRACT(EPOCH FROM CURRENT_TIMESTAMP) * 1000')).comment('The timestamp of order\'s latest updated time(accurate to milliseconds)')
 
     // Add indexes
     table.index('user_id')
@@ -31,9 +34,14 @@ export async function up(knex: Knex): Promise<void> {
     table.index('status')
     table.index('side')
     table.index('created_at')
-  })
+    })
+  }
 }
 
 export async function down(knex: Knex): Promise<void> {
-  await knex.schema.dropTable('orca_sim_order')
+  // Check if table exists before dropping
+  const hasTable = await knex.schema.hasTable('orca_sim_order')
+  if (hasTable) {
+    await knex.schema.dropTable('orca_sim_order')
+  }
 }

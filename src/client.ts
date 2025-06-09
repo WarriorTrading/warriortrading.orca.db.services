@@ -1,8 +1,7 @@
 // For more information about this file see https://dove.feathersjs.com/guides/cli/client.html
 import type { Application } from '@feathersjs/feathers'
 import { feathers } from '@feathersjs/feathers'
-import { io } from 'socket.io-client'
-import type { SocketService } from '@feathersjs/socketio-client'
+
 import { positionClient } from './services/positions/positions.shared.js'
 import type {
   Position,
@@ -16,7 +15,6 @@ import { accountClient } from './services/accounts/accounts.shared.js'
 import type { Account, AccountData, AccountQuery, AccountPatch } from './services/accounts/accounts.shared.js'
 
 // Import client modules
-import socketio from '@feathersjs/socketio-client'
 import rest from '@feathersjs/rest-client'
 import auth from '@feathersjs/authentication-client'
 
